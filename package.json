@@ -1,0 +1,20 @@
+{
+  "name": "bountydao",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "prepare:mainnet": "mustache config/mainnet.json subgraph.template.yaml > subgraph.yaml",
+    "build": "graph build",
+    "deploy": "graph deploy --product hosted-service schmackofant/bounty-dao",
+    "create-local": "graph create --node http://localhost:8020/ bounty-dao",
+    "remove-local": "graph remove --node http://localhost:8020/ bounty-dao",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 bounty-dao"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.25.1",
+    "@graphprotocol/graph-ts": "0.24.1"
+  },
+  "devDependencies": {
+    "mustache": "^3.1.0"
+  }
+}

@@ -1,0 +1,95 @@
+type Bounty @entity {
+  "same id the bounty has in the smart contract"
+  id: ID!
+  "IPFS CID hash of the bounty data"
+  contentCID: String!
+  "address of the token that is set for the bounty reward"
+  token: String!
+  title: String
+  description: String
+  webReferenceURL: String
+  fulfillersNeedApproval: Boolean
+  tokenSymbol: String
+  "total amount of reward tokens"
+  totalAmount: BigInt!
+  "how much of the reward is left as a balance"
+  balance: BigInt!
+  "how much has already been drained from the reward"
+  drainedAmount: BigInt!
+  categories: String
+  expectedRevisions: Int
+  difficulty: String
+  privateFulfillments: Boolean
+  deadline: String!
+  createdAt: BigInt!
+  creator: Account!
+  issuers: [BountyIssuer!]! @derivedFrom(field: "bounty")
+  approvers: [BountyApprover!]! @derivedFrom(field: "bounty")
+  fulfillments: [BountyFulfillment!]! @derivedFrom(field: "bounty")
+  drainActions: [BountyDrainAction!]! @derivedFrom(field: "bounty")
+  contributions: [BountyContribution!]! @derivedFrom(field: "bounty")
+}
+
+type Account @entity {
+  "The id is set to the ethereum address of the account"
+  id: ID!
+  createdBounties: [Bounty!]! @derivedFrom(field: "creator")
+  issuedBounties: [BountyIssuer!]! @derivedFrom(field: "account")
+  approverFor: [BountyApprover!]! @derivedFrom(field: "account")
+  bountyFulfillments: [BountyFulfiller!]! @derivedFrom(field: "account")
+  fulfillmentsSubmitted: [BountyFulfillment!]! @derivedFrom(field: "submitter")
+  bountyDrainActions: [BountyDrainAction!]! @derivedFrom(field: "drainer")
+  bountyContributions: [BountyContribution!]! @derivedFrom(field: "contributor")
+}
+
+type BountyIssuer @entity {
+  id: ID!
+  account: Account!
+  bounty: Bounty!
+}
+
+type BountyApprover @entity {
+  id: ID!
+  account: Account!
+  bounty: Bounty!
+}
+
+type BountyFulfiller @entity {
+  id: ID!
+  account: Account!
+  fulfillment: BountyFulfillment!
+  payoutAmount: BigInt!
+}
+
+type BountyFulfillment @entity {
+  id: ID!
+  "IPFS CID hash of the fulfillment data"
+  contentCID: String!
+  bounty: Bounty!
+  submitter: Account!
+  "was the fulfillment accepted?"
+  accepted: Boolean!
+  description: String
+  sourceFileName: String
+  sourceFileHash: String
+  sourceDirectoryHash: String
+  fulfillers: [BountyFulfiller!]! @derivedFrom(field: "fulfillment")
+  createdAt: BigInt!
+}
+
+type BountyDrainAction @entity {
+  id: ID!
+  bounty: Bounty!
+  drainer: Account!
+  amount: BigInt!
+  createdAt: BigInt!
+}
+
+type BountyContribution @entity {
+  id: ID!
+  bounty: Bounty!
+  contributor: Account!
+  "how much was contributed"
+  amount: BigInt!
+  createdAt: BigInt!
+}

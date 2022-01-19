@@ -1,0 +1,65 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: StandardBounties
+    network: {{network}}
+    source:
+      address: '{{address}}'
+      abi: StandardBounties
+      startBlock: {{startBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - BountyIssued
+        - BountyFulfilled
+        - BountyDrained
+        - FulfillmentAccepted
+        - ContributionAdded
+        # Not implemented for now
+        # - ActionPerformed
+        # - BountyApproversUpdated
+        # - BountyChanged
+        # - BountyDataChanged
+        # - BountyDeadlineChanged
+        # - BountyIssuersUpdated
+        # - ContributionRefunded
+        # - ContributionsRefunded
+        # - FulfillmentUpdated
+      abis:
+        - name: StandardBounties
+          file: ./abis/StandardBounties.json
+      eventHandlers:
+        - event: BountyIssued(uint256,address,address[],address[],string,uint256,address,uint256)
+          handler: handleBountyIssued
+        - event: BountyFulfilled(uint256,uint256,address[],string,address)
+          handler: handleBountyFulfilled
+        - event: BountyDrained(uint256,address,uint256[])
+          handler: handleBountyDrained
+        - event: FulfillmentAccepted(uint256,uint256,address,uint256[])
+          handler: handleFulfillmentAccepted
+        - event: ContributionAdded(uint256,uint256,address,uint256)
+          handler: handleContributionAdded
+        # Not implemented for now
+        # - event: ActionPerformed(uint256,address,string)
+        #   handler: handleActionPerformed
+        # - event: BountyApproversUpdated(uint256,address,address[])
+        #   handler: handleBountyApproversUpdated
+        # - event: BountyChanged(uint256,address,address[],address[],string,uint256)
+        #   handler: handleBountyChanged
+        # - event: BountyDataChanged(uint256,address,string)
+        #   handler: handleBountyDataChanged
+        # - event: BountyDeadlineChanged(uint256,address,uint256)
+        #   handler: handleBountyDeadlineChanged
+        # - event: BountyIssuersUpdated(uint256,address,address[])
+        #   handler: handleBountyIssuersUpdated
+        # - event: ContributionRefunded(uint256,uint256)
+        #   handler: handleContributionRefunded
+        # - event: ContributionsRefunded(uint256,address,uint256[])
+        #   handler: handleContributionsRefunded
+        # - event: FulfillmentUpdated(uint256,uint256,address[],string)
+        #   handler: handleFulfillmentUpdated
+      file: ./src/mapping.ts
